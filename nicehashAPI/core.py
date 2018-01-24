@@ -233,12 +233,19 @@ def _check_location(location):
 
 
 def _check_algorithm(algorithm):
+
     if isinstance(algorithm, int):
         if algorithm not in range(len(algos)):
             raise ValueError("Invalid algorithm option!")
+
+        else:
+            return str(algorithm)
 
     elif isinstance(algorithm, str):
         try:
             return str(algos.index(algorithm))
         except ValueError:
             raise ValueError("Unknown algorithm!")
+
+    else:
+        raise ValueError("Algorithm parameter must be either an int or str")
