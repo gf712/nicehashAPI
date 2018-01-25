@@ -1,5 +1,6 @@
 import requests
 import warnings
+import json
 
 algos = ['Scrypt', 'SHA256', 'ScryptNf', 'X11', 'X13', 'Keccak', 'X15',
          'Nist5', 'NeoScrypt', 'Lyra2RE', 'WhirlpoolX', 'Qubit', 'Quark',
@@ -18,6 +19,9 @@ class Pool:
         self._pool_user = str(pool_user)
         self._pool_password = str(pool_password)
 
+    def save(self, filename):
+        json.dump(self._to_dict(), open(filename, 'w'))
+
     @property
     def pool_hostname(self):
         return self._pool_hostname
@@ -33,6 +37,25 @@ class Pool:
     @property
     def pool_password(self):
         return self._pool_password
+
+    def _to_dict(self):
+        return {'pool_hostname': self._pool_hostname,
+                'pool_port': self._pool_port,
+                'pool_user': self._pool_user,
+                'pool_password': self._pool_password}
+
+
+def load_pool(filename):
+    dict_pool = json.load(open(filename, 'r'))
+
+    return Pool(dict_pool['pool_hostname'],
+                dict_pool['pool_port'],
+                dict_pool['pool_user'],
+                dict_pool['pool_password'])
+
+
+def save_pool(pool, filename):
+    pool.save(filename)
 
 
 class API:
@@ -233,7 +256,6 @@ def _check_location(location):
 
 
 def _check_algorithm(algorithm):
-
     if isinstance(algorithm, int):
         if algorithm not in range(len(algos)):
             raise ValueError("Invalid algorithm option!")
