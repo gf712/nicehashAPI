@@ -14,31 +14,75 @@ base_url = 'https://api.nicehash.com/api?method={}'
 class Pool:
 
     def __init__(self, pool_hostname, pool_port, pool_user, pool_password):
+
+        """
+        A simple object that contains all the information needed to connect
+        to a mining pool.
+
+        Args:
+            pool_hostname (str): mining pool hostname
+            pool_port (str): mining pool port
+            pool_user (str): user name (usually public key to wallet)
+            pool_password (str): usually x, or nothing
+        """
+
         self._pool_hostname = str(pool_hostname)
         self._pool_port = str(pool_port)
         self._pool_user = str(pool_user)
         self._pool_password = str(pool_password)
 
     def save(self, filename):
+
+        """
+        Saves pool information in json format.
+
+        Args:
+            filename (str): filename to save pool information.
+                Use whichever extension you want!
+
+        """
         json.dump(self._to_dict(), open(filename, 'w'))
 
     @property
     def pool_hostname(self):
+        """
+        str: mining pool hostname
+        """
+
         return self._pool_hostname
 
     @property
     def pool_port(self):
+        """
+        str: mining pool port
+        """
+
         return self._pool_port
 
     @property
     def pool_user(self):
+        """
+        str: mining pool username
+        """
+
         return self._pool_user
 
     @property
     def pool_password(self):
+        """
+        str: mining pool password
+        """
+
         return self._pool_password
 
     def _to_dict(self):
+        """
+        Private method to create a dictionary from attributes
+
+        Returns:
+            dict: Dictionary with attribute values in the corresponding keys
+
+        """
         return {'pool_hostname': self._pool_hostname,
                 'pool_port': self._pool_port,
                 'pool_user': self._pool_user,
@@ -46,6 +90,17 @@ class Pool:
 
 
 def load_pool(filename):
+
+    """
+    Function to instantiate a Pool object from a json file.
+
+    Args:
+        filename (str): file name where Pool object was saved to
+
+    Returns:
+        Pool: Pool object with information parsed from filename file
+
+    """
     dict_pool = json.load(open(filename, 'r'))
 
     return Pool(dict_pool['pool_hostname'],
@@ -55,12 +110,32 @@ def load_pool(filename):
 
 
 def save_pool(pool, filename):
+
+    """
+    Helper function to save Pool object. Uses the .save method of Pool object.
+    This function only complements the existing load_pool function.
+
+    Args:
+        pool (Pool): Pool object to save as .json
+        filename (str): name of file where Pool object will be saved
+
+    """
+
     pool.save(filename)
 
 
 class API:
 
     def __init__(self, key_path=None, id_key=None, api_key=None):
+
+        """
+        Nicehash API python wrapper.
+
+        Args:
+            key_path:
+            id_key:
+            api_key:
+        """
 
         if key_path is not None:
             with open(key_path, 'r') as f:
